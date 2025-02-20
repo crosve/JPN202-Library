@@ -1,20 +1,23 @@
 package main
 
 import (
+	"database/sql"
 	"os"
 
 	"fmt"
 	"log"
 	"net/http"
 
+	"github.com/crosve/JPN202-Library/internal/database"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
-// type apiConfig struct {
-// 	DB *database.Queries
-// }
+type apiConfig struct {
+	DB *database.Queries
+}
 
 func main() {
 	godotenv.Load()
@@ -33,6 +36,16 @@ func main() {
 		return
 	}
 
+	conn, err := sql.Open("postgres", databaseURL)
+	if err != nil {
+		log.Fatal(fmt.Printf("Error opening database connection: %v", err))
+		return
+	}
+
+	apiCfg := &apiConfig{
+		DB: database.New(conn),
+	}
+
 	fmt.Println("Port: ", portString)
 
 	router := chi.NewRouter()
@@ -43,11 +56,12 @@ func main() {
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: false,
-		MaxAge:           300, // Maximum value not ignored by any of major browsers
+		MaxAge:           300,
 	}))
 
 	v1Router := chi.NewRouter()
 	v1Router.HandleFunc("/ready", readinessHandler)
+	v1Router.HandleFunc("/createGrammar", apiCfg.handleCreateGrammar)
 
 	router.Mount("/v1", v1Router)
 
@@ -55,9 +69,11 @@ func main() {
 		Handler: router,
 		Addr:    ":" + portString,
 	}
+	fmt.Println("Server is up and running on port: ", portString)
 
-	err := srv.ListenAndServe()
-	if err != nil {
+	err2 := srv.ListenAndServe()
+
+	if err2 != nil {
 		log.Fatal(err)
 	}
 
