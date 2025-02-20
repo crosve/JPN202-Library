@@ -62,6 +62,7 @@ func main() {
 	v1Router := chi.NewRouter()
 	v1Router.HandleFunc("/ready", readinessHandler)
 	v1Router.HandleFunc("/createGrammar", apiCfg.handleCreateGrammar)
+	v1Router.HandleFunc("/createVocabulary", apiCfg.handleCreateVocabulary)
 
 	router.Mount("/v1", v1Router)
 
