@@ -11,6 +11,13 @@ import (
 	"github.com/google/uuid"
 )
 
+type Chapter struct {
+	Chapterid     uuid.UUID
+	Chapternumber int32
+	Grammarid     uuid.NullUUID
+	Vocabularyid  uuid.NullUUID
+}
+
 type Grammar struct {
 	Grammarid    uuid.UUID
 	Grammartopic string
@@ -21,6 +28,6 @@ type Grammar struct {
 type Vocabulary struct {
 	Vocabularyid uuid.UUID
 	Hiragana     string
-	Kanji        sql.NullString
+	Kanji        string
 	Translation  string
 }

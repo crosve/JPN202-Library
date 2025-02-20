@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -13,11 +12,10 @@ import (
 func (apiCfg *apiConfig) handleCreateVocabulary(w http.ResponseWriter, r *http.Request) {
 
 	type CreateVocabularyParams struct {
-		Hiragana    string         `json:"hiragana"`
-		Kanji       sql.NullString `json:"kanji"`
-		Translation string         `json:"translation"`
+		Hiragana    string `json:"hiragana"`
+		Kanji       string `json:"kanji"`
+		Translation string `json:"translation"`
 	}
-
 	params := CreateVocabularyParams{}
 
 	decode := json.NewDecoder(r.Body)

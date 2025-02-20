@@ -7,7 +7,6 @@ package database
 
 import (
 	"context"
-	"database/sql"
 
 	"github.com/google/uuid"
 )
@@ -21,7 +20,7 @@ RETURNING vocabularyid, hiragana, kanji, translation
 type CreateVocabularyParams struct {
 	Vocabularyid uuid.UUID
 	Hiragana     string
-	Kanji        sql.NullString
+	Kanji        string
 	Translation  string
 }
 

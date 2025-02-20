@@ -2,7 +2,7 @@
 CREATE TABLE vocabulary (
     vocabularyId UUID PRIMARY KEY,
     hiragana TEXT NOT NULL,
-    kanji TEXT, 
+    kanji TEXT NOT NULL , 
     translation TEXT NOT NULL
 );
 
