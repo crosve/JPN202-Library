@@ -11,6 +11,14 @@ import (
 	"github.com/google/uuid"
 )
 
+type Admin struct {
+	Adminid   uuid.UUID
+	Username  string
+	Password  string
+	CreatedAt sql.NullTime
+	UpdatedAt sql.NullTime
+}
+
 type Chapter struct {
 	Chapterid     uuid.UUID
 	Chapternumber int32

@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/landingpage/Navbar";
 import LandingPage from "./routes/Landingpage";
+import AdminLogin from "./routes/AdminLogin";
 
 import { useState } from "react";
 
@@ -16,6 +17,7 @@ function App() {
       />
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
       </Routes>
     </Router>
   );

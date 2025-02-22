@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 interface NavbarProps {
   selectedChapter: number | null;
@@ -27,9 +28,9 @@ const Navbar: React.FC<NavbarProps> = ({
 
       <div>
         <div className="flex items-center space-x-4">
-          <a href="#" className="text-lg">
-            Home
-          </a>
+          <Link to="/admin-login" className="text-lg">
+            Admin
+          </Link>
           <a href="#" className="text-lg">
             About
           </a>

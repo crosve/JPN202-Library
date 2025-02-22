@@ -50,7 +50,6 @@ const LandingPage = () => {
       await axios
         .get(`http://localhost:8080/v1/getVocabulary?query=${inputText}`)
         .then((response: AxiosResponse<any, any>) => {
-          console.log(response.data);
           setVocabResult(response.data);
         });
     } catch (err) {
