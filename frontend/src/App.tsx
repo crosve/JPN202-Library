@@ -1,16 +1,23 @@
 import "./App.css";
-import { PasswordInput } from "@mantine/core";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/landingpage/Navbar";
+import LandingPage from "./routes/Landingpage";
+
+import { useState } from "react";
 
 function App() {
+  const [selectedChapter, setSelectedChapter] = useState<number | null>(null);
+
   return (
-    <>
-      <div className="text-2xl">heyyy</div>
-      <PasswordInput
-        label="Input label"
-        description="Input description"
-        placeholder="Input placeholder"
+    <Router>
+      <Navbar
+        setSelectedChapter={setSelectedChapter}
+        selectedChapter={selectedChapter}
       />
-    </>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+      </Routes>
+    </Router>
   );
 }
 
