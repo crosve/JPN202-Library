@@ -24,7 +24,12 @@ const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <div className="w-screen h-24 py-6 px-12 bg-amber-50 text-black flex items-center justify-between">
-      <h1 className="text-2xl font-bold">Genki-Online</h1>
+      <Link
+        to="/"
+        className="text-2xl font-bold hover:text-amber-200 hover:underline"
+      >
+        Genki-Online
+      </Link>
 
       <div>
         <div className="flex items-center space-x-4">

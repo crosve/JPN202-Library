@@ -28,7 +28,10 @@ function AdminLogin() {
         .post("http://localhost:8080/v1/validateAdmin", values)
         .then((res) => {
           if (res.status === 200) {
-            console.log("Login successful");
+            console.log("Login successful", res.data);
+
+            localStorage.setItem("adminid", res.data.Adminid);
+            alert("Clearence granted, welcome admin");
           }
         });
     } catch (err) {

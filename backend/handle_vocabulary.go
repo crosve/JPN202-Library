@@ -14,9 +14,11 @@ import (
 func (apiCfg *apiConfig) handleCreateVocabulary(w http.ResponseWriter, r *http.Request) {
 
 	type CreateVocabularyParams struct {
-		Hiragana    string `json:"hiragana"`
-		Kanji       string `json:"kanji"`
-		Translation string `json:"translation"`
+		Hiragana      string `json:"hiragana"`
+		Kanji         string `json:"kanji"`
+		Translation   string `json:"translation"`
+		ChapterNumber string `json:"chapter_number"`
+		Type          string `json:"type"`
 	}
 	params := CreateVocabularyParams{}
 
@@ -30,10 +32,12 @@ func (apiCfg *apiConfig) handleCreateVocabulary(w http.ResponseWriter, r *http.R
 	}
 
 	Vocabulary, error := apiCfg.DB.CreateVocabulary(r.Context(), database.CreateVocabularyParams{
-		Vocabularyid: uuid.New(),
-		Hiragana:     params.Hiragana,
-		Kanji:        params.Kanji,
-		Translation:  params.Translation,
+		Vocabularyid:  uuid.New(),
+		Hiragana:      params.Hiragana,
+		Kanji:         params.Kanji,
+		Translation:   params.Translation,
+		Chapternumber: params.ChapterNumber,
+		Type:          params.Type,
 	})
 
 	if error != nil {
@@ -64,4 +68,48 @@ func (apiCfg *apiConfig) handleGetVocabulary(w http.ResponseWriter, r *http.Requ
 	}
 
 	respondWithJSON(w, http.StatusOK, convertVocabularyDBToVocabulary(vocabulary))
+}
+
+func (apiCfg *apiConfig) handleInsertManyVocabulary(w http.ResponseWriter, r *http.Request) {
+
+	type CreateVocabularyParams struct {
+		Vocabulary []struct {
+			Hiragana    string `json:"hiragana"`
+			Kanji       string `json:"kanji"`
+			Translation string `json:"translation"`
+			ChapterId   string `json:"chapterId"`
+			Type        string `json:"type"`
+		} `json:"vocabulary"`
+	}
+	params := CreateVocabularyParams{}
+
+	decode := json.NewDecoder(r.Body)
+
+	err := decode.Decode(&params)
+
+	for _, v := range params.Vocabulary {
+		fmt.Println(v)
+	}
+
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Invalid request payload: %v", err))
+		return
+	}
+
+	for _, v := range params.Vocabulary {
+		error := apiCfg.DB.CreateVocabularyForList(r.Context(), database.CreateVocabularyForListParams{
+			Vocabularyid: uuid.New(),
+			Hiragana:     v.Hiragana,
+			Kanji:        v.Kanji,
+			Translation:  v.Translation,
+			Type:         v.Type,
+		})
+		if error != nil {
+			respondWithError(w, 500, fmt.Sprintf("Error creating vocabulary: %v", error))
+			return
+		}
+	}
+
+	respondWithJSON(w, 200, "Successfully created vocabulary")
+
 }

@@ -36,7 +36,4 @@ func (apiCfg *apiConfig) handleValidateAdmin(w http.ResponseWriter, r *http.Requ
 
 	respondWithJSON(w, 200, Admin)
 
-	// Check if the username and password are correct
-	// If they are, return a 200 status code
-	// If they are not, return a 401 status code
 }

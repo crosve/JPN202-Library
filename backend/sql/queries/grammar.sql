@@ -1,5 +1,7 @@
 -- name: CreateGrammar :one
-INSERT INTO grammar (grammarId, grammarTopic, examples, pageRefrence) VALUES ($1, $2, $3, $4) RETURNING *;
+INSERT INTO grammar (grammarId, grammarTopic, examples, pageRefrence, chapterNumber) 
+VALUES ($1, $2, $3, $4, $5) 
+RETURNING *;
 
 
 -- -- name: GetGrammar :one

@@ -1,0 +1,11 @@
+-- +goose Up
+CREATE TABLE admin (
+    adminId UUID PRIMARY KEY, 
+    username TEXT NOT NULL UNIQUE, 
+    password TEXT NOT NULL, 
+    createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+    updatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- +goose Down
+DROP TABLE admin;

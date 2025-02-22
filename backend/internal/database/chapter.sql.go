@@ -17,7 +17,7 @@ INSERT INTO chapter (chapterId, chapterNumber) VALUES ($1, $2) RETURNING chapter
 
 type CreateChapterParams struct {
 	Chapterid     uuid.UUID
-	Chapternumber int32
+	Chapternumber string
 }
 
 func (q *Queries) CreateChapter(ctx context.Context, arg CreateChapterParams) (Chapter, error) {

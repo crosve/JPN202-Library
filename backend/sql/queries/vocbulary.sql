@@ -1,7 +1,11 @@
 -- name: CreateVocabulary :one
-INSERT INTO vocabulary (vocabularyId, hiragana, kanji, translation)
-VALUES ($1, $2, $3, $4)
+INSERT INTO vocabulary (vocabularyId, hiragana, kanji, translation, chapterNumber, type)
+VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING *; 
+
+-- name: CreateVocabularyForList :exec
+INSERT INTO vocabulary (vocabularyId, hiragana, kanji, translation, chapterNumber, type)
+VALUES ($1, $2, $3, $4, $5, $6);
 
 
 -- name: GetVocabulary :one

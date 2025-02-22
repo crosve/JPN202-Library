@@ -7,6 +7,7 @@ package database
 import (
 	"database/sql"
 	"encoding/json"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -15,27 +16,28 @@ type Admin struct {
 	Adminid   uuid.UUID
 	Username  string
 	Password  string
-	CreatedAt sql.NullTime
-	UpdatedAt sql.NullTime
+	Createdat time.Time
+	Updatedat time.Time
 }
 
 type Chapter struct {
 	Chapterid     uuid.UUID
-	Chapternumber int32
+	Chapternumber string
 }
 
 type Grammar struct {
-	Grammarid    uuid.UUID
-	Grammartopic string
-	Examples     json.RawMessage
-	Pagerefrence sql.NullString
-	Chapterid    uuid.UUID
+	Grammarid     uuid.UUID
+	Grammartopic  string
+	Examples      json.RawMessage
+	Pagerefrence  sql.NullString
+	Chapternumber string
 }
 
 type Vocabulary struct {
-	Vocabularyid uuid.UUID
-	Hiragana     string
-	Kanji        string
-	Translation  string
-	Chapterid    uuid.UUID
+	Vocabularyid  uuid.UUID
+	Hiragana      string
+	Kanji         string
+	Translation   string
+	Type          string
+	Chapternumber string
 }

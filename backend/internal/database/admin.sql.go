@@ -10,7 +10,7 @@ import (
 )
 
 const validateAdmin = `-- name: ValidateAdmin :one
-SELECT adminid, username, password, created_at, updated_at FROM admin WHERE username = $1 AND password = $2 LIMIT 1
+SELECT adminid, username, password, createdat, updatedat FROM admin WHERE username = $1 AND password = $2 LIMIT 1
 `
 
 type ValidateAdminParams struct {
@@ -25,8 +25,8 @@ func (q *Queries) ValidateAdmin(ctx context.Context, arg ValidateAdminParams) (A
 		&i.Adminid,
 		&i.Username,
 		&i.Password,
-		&i.CreatedAt,
-		&i.UpdatedAt,
+		&i.Createdat,
+		&i.Updatedat,
 	)
 	return i, err
 }

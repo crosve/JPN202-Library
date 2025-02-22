@@ -1,30 +1,23 @@
 package main
 
-// import (
-// 	"net/http"
+import (
+	"net/http"
 
-// 	"github.com/crosve/golang/internal/auth"
-// 	"github.com/crosve/golang/internal/database"
-// )
+	"github.com/crosve/JPN202-Library/internal/auth"
+)
 
-// type authedHandler func(http.ResponseWriter, *http.Request, database.User)
+type authedHandler func(http.ResponseWriter, *http.Request)
 
-// func (apiConfig *apiConfig) authMiddleware(handler authedHandler) http.HandlerFunc {
-// 	return func(w http.ResponseWriter, r *http.Request) {
-// 		apiKey, err := auth.GetAPIKey(r.Header)
+func (apiConfig *apiConfig) authMiddleware(handler authedHandler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		_, err := auth.GetAdminId(r.Header)
 
-// 		if err != nil {
-// 			respondWithError(w, 401, "Error getting API Key: "+err.Error())
-// 			return
-// 		}
+		if err != nil {
+			respondWithError(w, 401, "Error getting API Key: "+err.Error())
+			return
+		}
 
-// 		user, err := apiConfig.DB.GetUserByAPIKey(r.Context(), apiKey)
+		handler(w, r)
 
-// 		if err != nil {
-// 			respondWithError(w, 404, "User with API Key "+apiKey+" not found")
-// 			return
-// 		}
-
-// 		handler(w, r, user)
-// 	}
-// }
+	}
+}

@@ -13,16 +13,18 @@ import (
 )
 
 const createVocabulary = `-- name: CreateVocabulary :one
-INSERT INTO vocabulary (vocabularyId, hiragana, kanji, translation)
-VALUES ($1, $2, $3, $4)
-RETURNING vocabularyid, hiragana, kanji, translation, chapterid
+INSERT INTO vocabulary (vocabularyId, hiragana, kanji, translation, chapterNumber, type)
+VALUES ($1, $2, $3, $4, $5, $6)
+RETURNING vocabularyid, hiragana, kanji, translation, type, chapternumber
 `
 
 type CreateVocabularyParams struct {
-	Vocabularyid uuid.UUID
-	Hiragana     string
-	Kanji        string
-	Translation  string
+	Vocabularyid  uuid.UUID
+	Hiragana      string
+	Kanji         string
+	Translation   string
+	Chapternumber string
+	Type          string
 }
 
 func (q *Queries) CreateVocabulary(ctx context.Context, arg CreateVocabularyParams) (Vocabulary, error) {
@@ -31,6 +33,8 @@ func (q *Queries) CreateVocabulary(ctx context.Context, arg CreateVocabularyPara
 		arg.Hiragana,
 		arg.Kanji,
 		arg.Translation,
+		arg.Chapternumber,
+		arg.Type,
 	)
 	var i Vocabulary
 	err := row.Scan(
@@ -38,13 +42,40 @@ func (q *Queries) CreateVocabulary(ctx context.Context, arg CreateVocabularyPara
 		&i.Hiragana,
 		&i.Kanji,
 		&i.Translation,
-		&i.Chapterid,
+		&i.Type,
+		&i.Chapternumber,
 	)
 	return i, err
 }
 
+const createVocabularyForList = `-- name: CreateVocabularyForList :exec
+INSERT INTO vocabulary (vocabularyId, hiragana, kanji, translation, chapterNumber, type)
+VALUES ($1, $2, $3, $4, $5, $6)
+`
+
+type CreateVocabularyForListParams struct {
+	Vocabularyid  uuid.UUID
+	Hiragana      string
+	Kanji         string
+	Translation   string
+	Chapternumber string
+	Type          string
+}
+
+func (q *Queries) CreateVocabularyForList(ctx context.Context, arg CreateVocabularyForListParams) error {
+	_, err := q.db.ExecContext(ctx, createVocabularyForList,
+		arg.Vocabularyid,
+		arg.Hiragana,
+		arg.Kanji,
+		arg.Translation,
+		arg.Chapternumber,
+		arg.Type,
+	)
+	return err
+}
+
 const getVocabulary = `-- name: GetVocabulary :one
-SELECT vocabularyid, hiragana, kanji, translation, chapterid FROM vocabulary
+SELECT vocabularyid, hiragana, kanji, translation, type, chapternumber FROM vocabulary
 WHERE hiragana LIKE '%' || COALESCE($1, '') || '%'
 OR kanji LIKE '%' || COALESCE($1, '') || '%'
 OR translation LIKE '%' || COALESCE($1, '') || '%'
@@ -58,7 +89,8 @@ func (q *Queries) GetVocabulary(ctx context.Context, dollar_1 sql.NullString) (V
 		&i.Hiragana,
 		&i.Kanji,
 		&i.Translation,
-		&i.Chapterid,
+		&i.Type,
+		&i.Chapternumber,
 	)
 	return i, err
 }

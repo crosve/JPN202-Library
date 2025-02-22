@@ -14,14 +14,17 @@ import (
 )
 
 const createGrammar = `-- name: CreateGrammar :one
-INSERT INTO grammar (grammarId, grammarTopic, examples, pageRefrence) VALUES ($1, $2, $3, $4) RETURNING grammarid, grammartopic, examples, pagerefrence, chapterid
+INSERT INTO grammar (grammarId, grammarTopic, examples, pageRefrence, chapterNumber) 
+VALUES ($1, $2, $3, $4, $5) 
+RETURNING grammarid, grammartopic, examples, pagerefrence, chapternumber
 `
 
 type CreateGrammarParams struct {
-	Grammarid    uuid.UUID
-	Grammartopic string
-	Examples     json.RawMessage
-	Pagerefrence sql.NullString
+	Grammarid     uuid.UUID
+	Grammartopic  string
+	Examples      json.RawMessage
+	Pagerefrence  sql.NullString
+	Chapternumber string
 }
 
 func (q *Queries) CreateGrammar(ctx context.Context, arg CreateGrammarParams) (Grammar, error) {
@@ -30,6 +33,7 @@ func (q *Queries) CreateGrammar(ctx context.Context, arg CreateGrammarParams) (G
 		arg.Grammartopic,
 		arg.Examples,
 		arg.Pagerefrence,
+		arg.Chapternumber,
 	)
 	var i Grammar
 	err := row.Scan(
@@ -37,7 +41,7 @@ func (q *Queries) CreateGrammar(ctx context.Context, arg CreateGrammarParams) (G
 		&i.Grammartopic,
 		&i.Examples,
 		&i.Pagerefrence,
-		&i.Chapterid,
+		&i.Chapternumber,
 	)
 	return i, err
 }
