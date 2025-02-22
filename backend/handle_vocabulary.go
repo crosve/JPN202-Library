@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"database/sql"
+
 	"github.com/crosve/JPN202-Library/internal/database"
 	"github.com/google/uuid"
 )
@@ -41,4 +43,25 @@ func (apiCfg *apiConfig) handleCreateVocabulary(w http.ResponseWriter, r *http.R
 
 	respondWithJSON(w, 200, convertVocabularyDBToVocabulary(Vocabulary))
 
+}
+
+func (apiCfg *apiConfig) handleGetVocabulary(w http.ResponseWriter, r *http.Request) {
+
+	queryParam := r.URL.Query().Get("query") // Get query from request
+
+	// Convert to sql.NullString
+	var query sql.NullString
+	if queryParam == "" {
+		query = sql.NullString{Valid: false} // Represents NULL in SQL
+	} else {
+		query = sql.NullString{String: queryParam, Valid: true}
+	}
+
+	vocabulary, err := apiCfg.DB.GetVocabulary(r.Context(), query)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, fmt.Sprintf("Error getting vocabulary: %v", err))
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, convertVocabularyDBToVocabulary(vocabulary))
 }

@@ -63,6 +63,7 @@ func main() {
 	v1Router.HandleFunc("/ready", readinessHandler)
 	v1Router.HandleFunc("/createGrammar", apiCfg.handleCreateGrammar)
 	v1Router.HandleFunc("/createVocabulary", apiCfg.handleCreateVocabulary)
+	v1Router.HandleFunc("/getVocabulary", apiCfg.handleGetVocabulary)
 
 	router.Mount("/v1", v1Router)
 

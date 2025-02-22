@@ -12,29 +12,17 @@ import (
 )
 
 const createChapter = `-- name: CreateChapter :one
-INSERT INTO chapter (chapterId, chapterNumber, grammarId, vocabularyId) VALUES ($1, $2, $3, $4) RETURNING chapterid, chapternumber, grammarid, vocabularyid
+INSERT INTO chapter (chapterId, chapterNumber) VALUES ($1, $2) RETURNING chapterid, chapternumber
 `
 
 type CreateChapterParams struct {
 	Chapterid     uuid.UUID
 	Chapternumber int32
-	Grammarid     uuid.NullUUID
-	Vocabularyid  uuid.NullUUID
 }
 
 func (q *Queries) CreateChapter(ctx context.Context, arg CreateChapterParams) (Chapter, error) {
-	row := q.db.QueryRowContext(ctx, createChapter,
-		arg.Chapterid,
-		arg.Chapternumber,
-		arg.Grammarid,
-		arg.Vocabularyid,
-	)
+	row := q.db.QueryRowContext(ctx, createChapter, arg.Chapterid, arg.Chapternumber)
 	var i Chapter
-	err := row.Scan(
-		&i.Chapterid,
-		&i.Chapternumber,
-		&i.Grammarid,
-		&i.Vocabularyid,
-	)
+	err := row.Scan(&i.Chapterid, &i.Chapternumber)
 	return i, err
 }

@@ -14,7 +14,7 @@ import (
 )
 
 const createGrammar = `-- name: CreateGrammar :one
-INSERT INTO grammar (grammarId, grammarTopic, examples, pageRefrence) VALUES ($1, $2, $3, $4) RETURNING grammarid, grammartopic, examples, pagerefrence
+INSERT INTO grammar (grammarId, grammarTopic, examples, pageRefrence) VALUES ($1, $2, $3, $4) RETURNING grammarid, grammartopic, examples, pagerefrence, chapterid
 `
 
 type CreateGrammarParams struct {
@@ -37,6 +37,7 @@ func (q *Queries) CreateGrammar(ctx context.Context, arg CreateGrammarParams) (G
 		&i.Grammartopic,
 		&i.Examples,
 		&i.Pagerefrence,
+		&i.Chapterid,
 	)
 	return i, err
 }

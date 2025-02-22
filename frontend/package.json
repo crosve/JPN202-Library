@@ -13,6 +13,7 @@
     "@mantine/core": "^7.17.0",
     "@mantine/hooks": "^7.17.0",
     "@tailwindcss/vite": "^4.0.7",
+    "axios": "^1.7.9",
     "i18next": "^24.2.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

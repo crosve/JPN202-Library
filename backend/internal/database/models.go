@@ -14,8 +14,6 @@ import (
 type Chapter struct {
 	Chapterid     uuid.UUID
 	Chapternumber int32
-	Grammarid     uuid.NullUUID
-	Vocabularyid  uuid.NullUUID
 }
 
 type Grammar struct {
@@ -23,6 +21,7 @@ type Grammar struct {
 	Grammartopic string
 	Examples     json.RawMessage
 	Pagerefrence sql.NullString
+	Chapterid    uuid.UUID
 }
 
 type Vocabulary struct {
@@ -30,4 +29,5 @@ type Vocabulary struct {
 	Hiragana     string
 	Kanji        string
 	Translation  string
+	Chapterid    uuid.UUID
 }

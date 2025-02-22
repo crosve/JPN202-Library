@@ -1,11 +1,14 @@
 import React, { useState, useRef } from "react";
 import { Input } from "@mantine/core";
-import { Button } from "@mantine/core";
+import { Button, Card, Group } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import "../i18n";
+import axios from "axios";
+import { AxiosResponse } from "axios";
 
+import VocabCard from "../components/VocabCard";
 const JapaneseLayout = {
   default: [
     "ぬ ふ あ う え お や ゆ よ わ ほ へ",
@@ -22,6 +25,12 @@ const JapaneseLayout = {
     "{shift} ヤ ユ ヨ ワ ン {space} {shift}",
   ],
 };
+interface VocabResults {
+  translation: string;
+  hiragana: string;
+  kanji: string;
+  vocabularyid: number;
+}
 
 const LandingPage = () => {
   const { t, i18n } = useTranslation();
@@ -29,10 +38,24 @@ const LandingPage = () => {
   const [inputText, setInputText] = useState("");
   const [layoutName, setLayoutName] = useState("default");
   const [keyboardVisible, setKeyboardVisible] = useState(true);
+  const [vocabResult, setVocabResult] = useState<VocabResults | null>();
   const keyboard = useRef<any>("");
 
   const toggleLanguage = () => {
     setLanguage((prev) => (prev === "en" ? "jp" : "en"));
+  };
+
+  const fetchVocabulary = async () => {
+    try {
+      await axios
+        .get(`http://localhost:8080/v1/getVocabulary?query=${inputText}`)
+        .then((response: AxiosResponse<any, any>) => {
+          console.log(response.data);
+          setVocabResult(response.data);
+        });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const onChange = (input: string) => {
@@ -59,7 +82,7 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="w-screen min-h-screen bg-amber-50 text-black">
+    <div className="w-screen min-h-screen bg-amber-50 py-16 text-black">
       <div className="max-w-4xl mx-auto p-8">
         <div className="flex flex-col items-center space-y-8">
           <h1 className="text-3xl font-semibold">Quick Vocabulary Search</h1>
@@ -86,6 +109,14 @@ const LandingPage = () => {
                 className="h-12"
               >
                 {t("switch")}
+              </Button>
+              <Button
+                onClick={fetchVocabulary}
+                variant="light"
+                radius="xl"
+                className="h-12"
+              >
+                Search
               </Button>
             </div>
 
@@ -146,6 +177,7 @@ const LandingPage = () => {
           }
         `}
       </style>
+      {vocabResult && <VocabCard vocabResult={vocabResult} />}
     </div>
   );
 };
