@@ -113,3 +113,21 @@ func (apiCfg *apiConfig) handleInsertManyVocabulary(w http.ResponseWriter, r *ht
 	respondWithJSON(w, 200, "Successfully created vocabulary")
 
 }
+
+func (apiCfg *apiConfig) handleGetVocabularyByChapter(w http.ResponseWriter, r *http.Request) {
+
+	queryParam := r.URL.Query().Get("chapter") // Get query from request
+
+	if queryParam == "" {
+		respondWithError(w, http.StatusBadRequest, "Chapter query parameter is required")
+		return
+	}
+
+	vocabulary, err := apiCfg.DB.GetVocabularyByChapter(r.Context(), queryParam)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, fmt.Sprintf("Error getting vocabulary: %v", err))
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, convertVocabularyDBListToVocabularyList(vocabulary))
+}

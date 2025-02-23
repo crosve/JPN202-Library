@@ -6,3 +6,8 @@ RETURNING *;
 
 -- -- name: GetGrammar :one
 -- SELECT * FROM grammar WHERE grammarId = $1;
+
+
+-- name: GetGrammarByChapter :many
+SELECT * FROM grammar WHERE chapterNumber = $1;
+

@@ -38,7 +38,7 @@ const Navbar: React.FC<NavbarProps> = ({
         to="/"
         className="text-2xl font-bold hover:text-amber-200 hover:underline"
       >
-        Genki-Online
+        Agent Genki
       </Link>
 
       <div>

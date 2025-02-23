@@ -62,8 +62,12 @@ func main() {
 	v1Router := chi.NewRouter()
 	v1Router.HandleFunc("/ready", readinessHandler)
 	v1Router.HandleFunc("/createGrammar", apiCfg.handleCreateGrammar)
+	v1Router.HandleFunc("/getGrammar", apiCfg.handleGetGrammarByChapter)
+
 	v1Router.HandleFunc("/createVocabulary", apiCfg.handleCreateVocabulary)
 	v1Router.HandleFunc("/getVocabulary", apiCfg.handleGetVocabulary)
+	v1Router.HandleFunc("/getVocabularyByChapter", apiCfg.handleGetVocabularyByChapter)
+
 	v1Router.HandleFunc("/validateAdmin", apiCfg.handleValidateAdmin)
 	v1Router.HandleFunc("/createManyVocabulary", apiCfg.authMiddleware(apiCfg.handleInsertManyVocabulary))
 

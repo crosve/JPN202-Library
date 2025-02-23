@@ -94,3 +94,43 @@ func (q *Queries) GetVocabulary(ctx context.Context, dollar_1 sql.NullString) (V
 	)
 	return i, err
 }
+
+const getVocabularyByChapter = `-- name: GetVocabularyByChapter :many
+SELECT hiragana, kanji, translation, type FROM vocabulary
+WHERE chapterNumber = $1
+`
+
+type GetVocabularyByChapterRow struct {
+	Hiragana    string
+	Kanji       string
+	Translation string
+	Type        string
+}
+
+func (q *Queries) GetVocabularyByChapter(ctx context.Context, chapternumber string) ([]GetVocabularyByChapterRow, error) {
+	rows, err := q.db.QueryContext(ctx, getVocabularyByChapter, chapternumber)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetVocabularyByChapterRow
+	for rows.Next() {
+		var i GetVocabularyByChapterRow
+		if err := rows.Scan(
+			&i.Hiragana,
+			&i.Kanji,
+			&i.Translation,
+			&i.Type,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

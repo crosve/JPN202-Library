@@ -26,3 +26,27 @@ func convertVocabularyDBToVocabulary(v database.Vocabulary) Vocabulary {
 	}
 
 }
+
+type VocabularyListProp struct {
+	Hiragana    string `json:"hiragana"`
+	Translation string `json:"translation"`
+	Kanji       string `json:"kanji"`
+	Type        string `json:"type"`
+}
+
+func convertVocabularyDBListToVocabularyList(v []database.GetVocabularyByChapterRow) []VocabularyListProp {
+
+	var vocabularyList []VocabularyListProp
+
+	for _, vocabulary := range v {
+		vocabularyList = append(vocabularyList, VocabularyListProp{
+			Hiragana:    vocabulary.Hiragana,
+			Kanji:       vocabulary.Kanji,
+			Translation: vocabulary.Translation,
+			Type:        vocabulary.Type,
+		})
+	}
+
+	return vocabularyList
+
+}

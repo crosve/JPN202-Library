@@ -45,3 +45,40 @@ func (q *Queries) CreateGrammar(ctx context.Context, arg CreateGrammarParams) (G
 	)
 	return i, err
 }
+
+const getGrammarByChapter = `-- name: GetGrammarByChapter :many
+
+
+SELECT grammarid, grammartopic, examples, pagerefrence, chapternumber FROM grammar WHERE chapterNumber = $1
+`
+
+// -- name: GetGrammar :one
+// SELECT * FROM grammar WHERE grammarId = $1;
+func (q *Queries) GetGrammarByChapter(ctx context.Context, chapternumber string) ([]Grammar, error) {
+	rows, err := q.db.QueryContext(ctx, getGrammarByChapter, chapternumber)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Grammar
+	for rows.Next() {
+		var i Grammar
+		if err := rows.Scan(
+			&i.Grammarid,
+			&i.Grammartopic,
+			&i.Examples,
+			&i.Pagerefrence,
+			&i.Chapternumber,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

@@ -13,3 +13,7 @@ SELECT * FROM vocabulary
 WHERE hiragana LIKE '%' || COALESCE($1, '') || '%'
 OR kanji LIKE '%' || COALESCE($1, '') || '%'
 OR translation LIKE '%' || COALESCE($1, '') || '%';
+
+-- name: GetVocabularyByChapter :many
+SELECT hiragana, kanji, translation, type FROM vocabulary
+WHERE chapterNumber = $1;
