@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, JsonInput, Textarea, Group } from "@mantine/core";
 import axios from "axios";
 
@@ -6,13 +6,13 @@ interface VocabularyEntry {
   hiragana: string;
   kanji: string;
   translation: string;
-  chapterId: number;
+  chapter_number: string;
   type: string;
 }
 
 function VocabularyCreate() {
   const [jsonInput, setJsonInput] = useState<string>("");
-  const [vocabulary, setVocabulary] = useState<VocabularyEntry[]>([]);
+  const [vocabulary, setVocabulary] = useState<VocabularyEntry | null>(null);
   const [error, setError] = useState<string>("");
 
   // Validate the JSON structure
@@ -21,7 +21,7 @@ function VocabularyCreate() {
       typeof entry.hiragana === "string" &&
       typeof entry.kanji === "string" &&
       typeof entry.translation === "string" &&
-      typeof entry.chapterId === "number" &&
+      typeof entry.chapter_number === "string" &&
       typeof entry.type === "string"
     );
   };
@@ -32,36 +32,34 @@ function VocabularyCreate() {
       const parsedData = JSON.parse(jsonInput);
       console.log("Parsed data:", parsedData);
 
-      // Handle both single entry and array of entries
-      const entries = Array.isArray(parsedData) ? parsedData : [parsedData];
-
-      // Validate each entry
-      const isValid = entries.every(validateVocabularyEntry);
-
-      if (!isValid) {
+      // Validate the entry
+      if (!validateVocabularyEntry(parsedData)) {
         throw new Error("Invalid vocabulary entry format");
       }
 
-      setVocabulary(entries);
-      console.log("Vocabulary to insert:", entries);
+      setVocabulary(parsedData);
+      console.log("Vocabulary to insert:", parsedData);
 
-      await axios
-        .post("http://localhost:8080/v1/createManyVocabulary", entries, {
+      const response = await axios.post(
+        "http://localhost:8080/v1/createVocabulary",
+        parsedData,
+        {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("adminid")}`,
           },
-        })
-        .then((res) => {
-          if (res.status === 200) {
-            console.log("Vocabulary created successfully", res.data);
-          }
-        });
+        }
+      );
 
-      // Here you would make your API call to save the data
-      // Example: await axios.post('/api/vocabulary', entries);
+      if (response.status === 200) {
+        console.log("Vocabulary created successfully", response.data);
+        // Optionally clear the form after successful submission
+        setJsonInput("");
+        setVocabulary(null);
+      }
     } catch (error) {
       setError(error instanceof Error ? error.message : "Invalid JSON format");
+      console.error("Error creating vocabulary:", error);
     }
   };
 
@@ -78,7 +76,7 @@ function VocabularyCreate() {
   "hiragana": "じゅぎょうちゅうに",
   "kanji": "授業中に",
   "translation": "in class; during the class",
-  "chapterId": 16,
+  "chapter_number": "16",
   "type": "adverb"
 }`}
           formatOnBlur
@@ -91,7 +89,7 @@ function VocabularyCreate() {
           <Button onClick={handleSubmit}>Submit Vocabulary</Button>
         </Group>
 
-        {vocabulary.length > 0 && (
+        {vocabulary && (
           <div>
             <h3 className="mt-4 text-lg font-semibold">Current Vocabulary:</h3>
             <Textarea

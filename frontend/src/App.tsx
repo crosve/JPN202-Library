@@ -4,6 +4,7 @@ import Navbar from "./components/landingpage/Navbar";
 import LandingPage from "./routes/Landingpage";
 import AdminLogin from "./routes/AdminLogin";
 import VocabularyCreate from "./routes/admin/VocabularyCreate";
+import ChapterPage from "./routes/ChapterPage";
 
 import { useState } from "react";
 
@@ -20,6 +21,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/admin/vocabulary/create" element={<VocabularyCreate />} />
+        <Route path="/chapter/:chapter" element={<ChapterPage />} />
       </Routes>
     </Router>
   );

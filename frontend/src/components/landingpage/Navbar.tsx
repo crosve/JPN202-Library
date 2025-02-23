@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface NavbarProps {
   selectedChapter: number | null;
@@ -12,10 +13,19 @@ const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const chapters: number[] = [16, 17, 18, 19, 20];
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+  const adminid = localStorage.getItem("adminid");
 
   const handleChapterSelect = (chapter: number) => {
     setSelectedChapter(chapter);
+    navigate(`/chapter/${chapter}`);
+
     setIsDropdownOpen(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("adminid");
+    navigate("/");
   };
 
   const toggleDropdown = () => {
@@ -36,9 +46,6 @@ const Navbar: React.FC<NavbarProps> = ({
           <Link to="/admin-login" className="text-lg">
             Admin
           </Link>
-          <a href="#" className="text-lg">
-            About
-          </a>
           <div className="relative">
             <button onClick={toggleDropdown} className="text-lg">
               Chapter {selectedChapter ? `${selectedChapter}` : ""}
@@ -62,6 +69,17 @@ const Navbar: React.FC<NavbarProps> = ({
               </div>
             )}
           </div>
+          {adminid && (
+            <Link to="/admin/vocabulary/create" className="text-lg">
+              Create Vocabulary
+            </Link>
+          )}
+          <button
+            onClick={() => handleLogout()}
+            className="text-lg rounded-2xl shadow-md bg-amber-200 px-4 py-2 hover:bg-amber-300 hover:shadow-lg hover:text-amber-50"
+          >
+            Logout
+          </button>
         </div>
       </div>
     </div>
