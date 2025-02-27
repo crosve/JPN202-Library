@@ -5,6 +5,7 @@ import LandingPage from "./routes/Landingpage";
 import AdminLogin from "./routes/AdminLogin";
 import VocabularyCreate from "./routes/admin/VocabularyCreate";
 import ChapterPage from "./routes/ChapterPage";
+import Grammar from "./components/grammar/Grammar";
 
 import { useState } from "react";
 
@@ -22,6 +23,7 @@ function App() {
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/admin/vocabulary/create" element={<VocabularyCreate />} />
         <Route path="/chapter/:chapter" element={<ChapterPage />} />
+        <Route path="/grammar" element={<Grammar />} />
       </Routes>
     </Router>
   );

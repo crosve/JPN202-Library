@@ -43,8 +43,8 @@ const Navbar: React.FC<NavbarProps> = ({
 
       <div>
         <div className="flex items-center space-x-4">
-          <Link to="/admin-login" className="text-lg">
-            Admin
+          <Link to="/grammar" className="text-lg">
+            Grammar
           </Link>
           <div className="relative">
             <button onClick={toggleDropdown} className="text-lg">
