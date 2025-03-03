@@ -19,13 +19,10 @@ interface VerbGroups {
   [key: string]: VerbGroup;
 }
 
-// Define the Grammar component
-
 const Grammar = () => {
   const [activeTab, setActiveTab] = useState("group1");
   const [showExplanation, setShowExplanation] = useState(true);
 
-  // Define verb groups and example verbs
   const verbGroups: VerbGroups = {
     group1: {
       name: "Group 1 (Godan/U-verbs)",
