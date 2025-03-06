@@ -19,6 +19,12 @@ type apiConfig struct {
 	DB *database.Queries
 }
 
+func isRunningInDocker() bool {
+	_, err := os.Stat("/.dockerenv")
+	fmt.Println("isRunningInDocker: ", !os.IsNotExist(err))
+	return !os.IsNotExist(err)
+}
+
 func main() {
 	godotenv.Load()
 
@@ -30,6 +36,10 @@ func main() {
 	}
 
 	databaseURL := os.Getenv("SQL_DATABASE_URL")
+
+	if isRunningInDocker() {
+		databaseURL = os.Getenv("DOCKER_SQL_DATABASE_URL")
+	}
 
 	if databaseURL == "" {
 		log.Fatal("Database URL is not set in .env file")
