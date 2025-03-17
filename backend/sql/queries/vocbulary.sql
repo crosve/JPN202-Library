@@ -8,7 +8,7 @@ INSERT INTO vocabulary (vocabularyId, hiragana, kanji, translation, chapterNumbe
 VALUES ($1, $2, $3, $4, $5, $6);
 
 
--- name: GetVocabulary :one
+-- name: GetVocabulary :many
 SELECT * FROM vocabulary
 WHERE hiragana LIKE '%' || COALESCE($1, '') || '%'
 OR kanji LIKE '%' || COALESCE($1, '') || '%'
